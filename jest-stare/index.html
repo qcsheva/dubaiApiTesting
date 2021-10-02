@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>jest-stare!</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/diff2html.min.css" rel="stylesheet" type="text/css">
+    <link href="css/jest-stare.css" rel="stylesheet" type="text/css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/holder.js"></script>
+    <script src="js/diff2html.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/view.js"></script>
+</head>
+
+<body>
+    <header>
+        <!-- Fixed navbar -->
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <a class="navbar-brand" id="navbar-title" href="#">jest-stare</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="coverage-link" class="nav-link disabled" href="#">Coverage</a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="onoff-switch mr-sm-2 ml-sm-2">
+                            <input type="checkbox" name="off-switch" class="off-switch-checkbox" id="lab-passoff-switch" checked>
+                            <label class="onoff-switch-label" for="lab-passoff-switch">
+                                <span class="pass off-switch-inner"></span>
+                                <span class="off-switch-switch"></span>
+                            </label>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="onoff-switch mr-sm-2 ml-sm-2">
+                            <input type="checkbox" name="off-switch" class="off-switch-checkbox" id="lab-failoff-switch" checked>
+                            <label class="onoff-switch-label" for="lab-failoff-switch">
+                                <span class="fail off-switch-inner"></span>
+                                <span class="off-switch-switch"></span>
+                            </label>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="onoff-switch mr-sm-2 ml-sm-2">
+                            <input type="checkbox" name="off-switch" class="off-switch-checkbox" id="lab-pendingoff-switch" checked>
+                            <label class="onoff-switch-label" for="lab-pendingoff-switch">
+                                <span class="pending off-switch-inner"></span>
+                                <span class="off-switch-switch"></span>
+                            </label>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="onoff-switch mr-sm-2 ml-sm-2">
+                            <input type="checkbox" name="off-switch" class="off-switch-checkbox" id="lab-todooff-switch" checked>
+                            <label class="onoff-switch-label" for="lab-todooff-switch">
+                                <span class="todo off-switch-inner"></span>
+                                <span class="off-switch-switch"></span>
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+                <!-- <form class="form-inline mt-2 mt-md-0">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" disabled>
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit" disabled>Search</button>
+                </form> -->
+            </div>
+        </nav>
+    </header>
+
+    <!-- Begin page content -->
+    <main role="main" class="container">
+
+        <h1 class="mt-5"></h1>
+
+        <!-- Three columns of text below the carousel -->
+        <div class="row">
+            <div class="col-lg-4">
+                <canvas id="test-suites-canvas" width="100" height="100"></canvas>
+                <h2>Test Suites</h2>
+                <div class="list-group">
+                    <p id="test-suites-results" class="list-group-item list-group-item-action">1 passed, 1 total</p>
+                </div>
+            </div>
+            <!-- /.col-lg-4 -->
+            <div class="col-lg-4">
+                <canvas id="tests-canvas" width="100" height="100"></canvas>
+                <h2>Tests</h2>
+                <div class="list-group">
+                    <p id="tests-results" class="list-group-item list-group-item-action">1 passed, 71 total</p>
+                </div>
+            </div>
+            <!-- /.col-lg-4 -->
+            <div class="col-lg-4" id="snapshots-group">
+                <canvas id="snapshots-canvas" width="100" height="100"></canvas>
+                <h2>Snapshots</h2>
+                <div class="list-group">
+                    <p id="snapshots-results" class="list-group-item list-group-item-action">0 passed, 0 total</p>
+                </div>
+            </div>
+            <!-- /.col-lg-4 -->
+        </div>
+
+        <div id="loading-info" class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0"
+                aria-valuemax="100" style="width: 100%"></div>
+        </div>
+
+        <div class="d-none" id="test-summary"></div>
+        <div class="d-none" id="test-config">{
+  &quot;additionalResultsProcessors&quot;: [],
+  &quot;resultDir&quot;: &quot;.&#x2F;jest-stare&#x2F;&quot;,
+  &quot;resultHtml&quot;: &quot;index.html&quot;,
+  &quot;resultJson&quot;: &quot;jest-results.json&quot;
+}</div>
+        <div id="accordion">
+            <div class="d-none" id="test-results">{
+  &quot;numFailedTestSuites&quot;: 0,
+  &quot;numFailedTests&quot;: 0,
+  &quot;numPassedTestSuites&quot;: 1,
+  &quot;numPassedTests&quot;: 1,
+  &quot;numPendingTestSuites&quot;: 0,
+  &quot;numPendingTests&quot;: 70,
+  &quot;numRuntimeErrorTestSuites&quot;: 0,
+  &quot;numTodoTests&quot;: 0,
+  &quot;numTotalTestSuites&quot;: 1,
+  &quot;numTotalTests&quot;: 71,
+  &quot;openHandles&quot;: [],
+  &quot;snapshot&quot;: {
+    &quot;added&quot;: 0,
+    &quot;didUpdate&quot;: false,
+    &quot;failure&quot;: false,
+    &quot;filesAdded&quot;: 0,
+    &quot;filesRemoved&quot;: 0,
+    &quot;filesRemovedList&quot;: [],
+    &quot;filesUnmatched&quot;: 0,
+    &quot;filesUpdated&quot;: 0,
+    &quot;matched&quot;: 0,
+    &quot;total&quot;: 0,
+    &quot;unchecked&quot;: 0,
+    &quot;uncheckedKeysByFile&quot;: [],
+    &quot;unmatched&quot;: 0,
+    &quot;updated&quot;: 0
+  },
+  &quot;startTime&quot;: 1633004275624,
+  &quot;success&quot;: false,
+  &quot;testResults&quot;: [
+    {
+      &quot;leaks&quot;: false,
+      &quot;numFailingTests&quot;: 0,
+      &quot;numPassingTests&quot;: 1,
+      &quot;numPendingTests&quot;: 70,
+      &quot;numTodoTests&quot;: 0,
+      &quot;openHandles&quot;: [],
+      &quot;perfStats&quot;: {
+        &quot;end&quot;: 1633004279621,
+        &quot;runtime&quot;: 3879,
+        &quot;slow&quot;: false,
+        &quot;start&quot;: 1633004275742
+      },
+      &quot;skipped&quot;: false,
+      &quot;snapshot&quot;: {
+        &quot;added&quot;: 0,
+        &quot;fileDeleted&quot;: false,
+        &quot;matched&quot;: 0,
+        &quot;unchecked&quot;: 0,
+        &quot;uncheckedKeys&quot;: [],
+        &quot;unmatched&quot;: 0,
+        &quot;updated&quot;: 0
+      },
+      &quot;testFilePath&quot;: &quot;C:\\Users\\macwin\\Desktop\\dubai\\apiAuto-master\\apiTesting\\brands\\dubai.test.js&quot;,
+      &quot;testResults&quot;: [
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 1: Register&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 1: Register TC1.1: Verify with username&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC1.1: Verify with username&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 1: Register&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 1: Register TC1.2: Register account successfully&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC1.2: Register account successfully&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 2: Login and create Cookies Sessions&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 2: Login and create Cookies Sessions TC2.1: Forgot&#x2F;Reset Password - Verify email&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC2.1: Forgot&#x2F;Reset Password - Verify email&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 2: Login and create Cookies Sessions&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 2: Login and create Cookies Sessions TC2.2: Forgot&#x2F;Reset Password - Success with correct email&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC2.2: Forgot&#x2F;Reset Password - Success with correct email&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 2: Login and create Cookies Sessions&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 2: Login and create Cookies Sessions TC2.3: Check login with invalid user&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC2.3: Check login with invalid user&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 2: Login and create Cookies Sessions&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 2: Login and create Cookies Sessions TC2.6: Check login with valid user&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC2.6: Check login with valid user&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 12: MORE APIs&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 12: MORE APIs TC12.1: tintuc&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC12.1: tintuc&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 12: MORE APIs&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 12: MORE APIs TC12.2: taisaochonchungtoi&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC12.2: taisaochonchungtoi&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 12: MORE APIs&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 12: MORE APIs TC12.3: soikeonhacaihomnay&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC12.3: soikeonhacaihomnay&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 12: MORE APIs&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 12: MORE APIs TC12.4: dieukhoanvadieukien&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC12.4: dieukhoanvadieukien&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 12: MORE APIs&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 12: MORE APIs TC12.5: keochaua&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC12.5: keochaua&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 12: MORE APIs&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 12: MORE APIs TC12.6: keochauau&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC12.6: keochauau&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 12: MORE APIs&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 12: MORE APIs TC12.7: nhungcauhoithuonggap&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC12.7: nhungcauhoithuonggap&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 12: MORE APIs&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 12: MORE APIs TC12.8: gioithieu&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC12.8: gioithieu&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 12: MORE APIs&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 12: MORE APIs TC12.9: chinhsachbaomat&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC12.9: chinhsachbaomat&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 12: MORE APIs&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 12: MORE APIs TC12.10: huongdannaptien&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC12.10: huongdannaptien&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 12: MORE APIs&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 12: MORE APIs TC12.11: huongdanruttien&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC12.11: huongdanruttien&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 12: MORE APIs&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 12: MORE APIs TC12.12: huongdancacuoc&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC12.12: huongdancacuoc&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 12: MORE APIs&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 12: MORE APIs TC12.13: hotmatch&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC12.13: hotmatch&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 12: MORE APIs&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 12: MORE APIs TC12.14: whitelist&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC12.14: whitelist&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 12: MORE APIs&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 12: MORE APIs TC12.15: download&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC12.15: download&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 12: MORE APIs&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 12: MORE APIs TC12.16: favorites&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC12.16: favorites&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 13: SPORT&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 13: SPORT TC13.1: psport&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC13.1: psport&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 13: SPORT&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 13: SPORT TC13.2: csport&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC13.2: csport&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 13: SPORT&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 13: SPORT TC13.3: ksport&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC13.3: ksport&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 13: SPORT&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 13: SPORT TC13.4: ssport&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC13.4: ssport&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 14: GAMES&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 14: GAMES TC14.1: live casino&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC14.1: live casino&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 14: GAMES&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 14: GAMES TC14.2: gamebai&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC14.2: gamebai&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 14: GAMES&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 14: GAMES TC14.3: keno&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC14.3: keno&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 14: GAMES&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 14: GAMES TC14.4: lode&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC14.4: lode&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 14: GAMES&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 14: GAMES TC14.5: lodesieutoc&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC14.5: lodesieutoc&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 14: GAMES&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 14: GAMES TC14.6: quaysomunich&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC14.6: quaysomunich&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 14: GAMES&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 14: GAMES TC14.7: quaysoberlin&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC14.7: quaysoberlin&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 14: GAMES&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 14: GAMES TC14.8: quaysoatom&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC14.8: quaysoatom&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 14: GAMES&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 14: GAMES TC14.9: banca&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC14.9: banca&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 14: GAMES&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 14: GAMES TC14.10: congame&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC14.10: congame&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 14: GAMES&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 14: GAMES TC14.11: ingame&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC14.11: ingame&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 16: Game Providers&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 16: Game Providers TC16.1: allproviders&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC16.1: allproviders&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 3: Deposit Internet Banking&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 3: Deposit Internet Banking TC3.1: ibanking - ACB&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC3.1: ibanking - ACB&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 3: Deposit Internet Banking&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 3: Deposit Internet Banking TC3.2: ibanking - BIDV&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC3.2: ibanking - BIDV&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 3: Deposit Internet Banking&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 3: Deposit Internet Banking TC3.3: ibanking - Vietinbank&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC3.3: ibanking - Vietinbank&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 3: Deposit Internet Banking&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 3: Deposit Internet Banking TC3.4: ibanking - Vietcombank&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC3.4: ibanking - Vietcombank&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 3: Deposit Internet Banking&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 3: Deposit Internet Banking TC3.5: ibanking - DongA&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC3.5: ibanking - DongA&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 3: Deposit Internet Banking&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 3: Deposit Internet Banking TC3.6: ibanking - Techcombank&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC3.6: ibanking - Techcombank&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 3: Deposit Internet Banking&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 3: Deposit Internet Banking TC3.7: ibanking - Sacombank&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC3.7: ibanking - Sacombank&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 4: Deposit ATM&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 4: Deposit ATM TC4.1: ATM - ACB&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC4.1: ATM - ACB&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 4: Deposit ATM&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 4: Deposit ATM TC4.2: ATM - BIDV&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC4.2: ATM - BIDV&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 4: Deposit ATM&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 4: Deposit ATM TC4.3: ATM - Vietinbank&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC4.3: ATM - Vietinbank&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 4: Deposit ATM&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 4: Deposit ATM TC4.4: ATM - Vietcombank&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC4.4: ATM - Vietcombank&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 4: Deposit ATM&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 4: Deposit ATM TC4.5: ATM - DongA&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC4.5: ATM - DongA&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 4: Deposit ATM&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 4: Deposit ATM TC4.6: ATM - Techcombank&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC4.6: ATM - Techcombank&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 4: Deposit ATM&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 4: Deposit ATM TC4.7: ATM - Sacombank&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC4.7: ATM - Sacombank&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 5: Deposit Bank - Tai Quay&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 5: Deposit Bank - Tai Quay TC5.1: banking - ACB&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC5.1: banking - ACB&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 5: Deposit Bank - Tai Quay&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 5: Deposit Bank - Tai Quay TC5.2: banking - BIDV&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC5.2: banking - BIDV&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 5: Deposit Bank - Tai Quay&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 5: Deposit Bank - Tai Quay TC5.3: banking - Vietinbank&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC5.3: banking - Vietinbank&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 5: Deposit Bank - Tai Quay&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 5: Deposit Bank - Tai Quay TC5.4: banking - Vietcombank&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC5.4: banking - Vietcombank&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 5: Deposit Bank - Tai Quay&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 5: Deposit Bank - Tai Quay TC5.5: banking - DongA&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC5.5: banking - DongA&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 5: Deposit Bank - Tai Quay&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 5: Deposit Bank - Tai Quay TC5.6: banking - Techcombank&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC5.6: banking - Techcombank&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 5: Deposit Bank - Tai Quay&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 5: Deposit Bank - Tai Quay TC5.7: DIB - Sacombank&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC5.7: DIB - Sacombank&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 6: Deposit PAYWIN - smartpay&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 6: Deposit PAYWIN - smartpay TC6.1: smartpay - BIDV&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC6.1: smartpay - BIDV&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 6: Deposit PAYWIN - smartpay&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 6: Deposit PAYWIN - smartpay TC6.2: smartpay - ATM&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC6.2: smartpay - ATM&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 7: Deposit CARD - Nap the cao&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 7: Deposit CARD - Nap the cao TC7.1: card - Viettel&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC7.1: card - Viettel&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 8: Deposit MOMO&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 8: Deposit MOMO TC8.1: momo&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC8.1: momo&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 9: Withdraw BANKS&quot;
+          ],
+          &quot;duration&quot;: 1315,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 9: Withdraw BANKS TC9.1: Withdraw with DongA bank&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;passed&quot;,
+          &quot;title&quot;: &quot;TC9.1: Withdraw with DongA bank&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 10: Withdraw CARDS&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 10: Withdraw CARDS TC10.1: Viettel&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC10.1: Viettel&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 11: Update User Infor&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 11: Update User Infor TC11.1: Update User Infor&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC11.1: Update User Infor&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 15: Account&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 15: Account TC15.1: indexaccount&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC15.1: indexaccount&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 15: Account&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 15: Account TC15.2: lichsucacuoc&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC15.2: lichsucacuoc&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 15: Account&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 15: Account TC15.3: lichsupsport&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC15.3: lichsupsport&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 15: Account&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 15: Account TC15.4: lichsugiaodich&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC15.4: lichsugiaodich&quot;
+        },
+        {
+          &quot;ancestorTitles&quot;: [
+            &quot;Suite 15: Account&quot;
+          ],
+          &quot;duration&quot;: null,
+          &quot;failureDetails&quot;: [],
+          &quot;failureMessages&quot;: [],
+          &quot;fullName&quot;: &quot;Suite 15: Account TC15.5: Get user waller&quot;,
+          &quot;invocations&quot;: 1,
+          &quot;location&quot;: null,
+          &quot;numPassingAsserts&quot;: 0,
+          &quot;status&quot;: &quot;pending&quot;,
+          &quot;title&quot;: &quot;TC15.5: Get user waller&quot;
+        }
+      ],
+      &quot;failureMessage&quot;: null
+    }
+  ],
+  &quot;wasInterrupted&quot;: false,
+  &quot;coverageMap&quot;: {
+    &quot;C:\\Users\\macwin\\Desktop\\dubai\\apiAuto-master\\apiTesting\\apiList\\apiDubai.js&quot;: {
+      &quot;path&quot;: &quot;C:\\Users\\macwin\\Desktop\\dubai\\apiAuto-master\\apiTesting\\apiList\\apiDubai.js&quot;,
+      &quot;statementMap&quot;: {
+        &quot;0&quot;: {
+          &quot;start&quot;: {
+            &quot;line&quot;: 2,
+            &quot;column&quot;: 0
+          },
+          &quot;end&quot;: {
+            &quot;line&quot;: 79,
+            &quot;column&quot;: 1
+          }
+        }
+      },
+      &quot;fnMap&quot;: {},
+      &quot;branchMap&quot;: {},
+      &quot;s&quot;: {
+        &quot;0&quot;: 1
+      },
+      &quot;f&quot;: {},
+      &quot;b&quot;: {},
+      &quot;_coverageSchema&quot;: &quot;1a1c01bbd47fc00a2c39e90264f33305004495a9&quot;,
+      &quot;hash&quot;: &quot;a53b78caefcf487cee6f87c845cbe280206ad9e5&quot;
+    },
+    &quot;C:\\Users\\macwin\\Desktop\\dubai\\apiAuto-master\\apiTesting\\testData\\dataDubai.js&quot;: {
+      &quot;path&quot;: &quot;C:\\Users\\macwin\\Desktop\\dubai\\apiAuto-master\\apiTesting\\testData\\dataDubai.js&quot;,
+      &quot;statementMap&quot;: {
+        &quot;0&quot;: {
+          &quot;start&quot;: {
+            &quot;line&quot;: 4,
+            &quot;column&quot;: 12
+          },
+          &quot;end&quot;: {
+            &quot;line&quot;: 4,
+            &quot;column&quot;: 28
+          }
+        },
+        &quot;1&quot;: {
+          &quot;start&quot;: {
+            &quot;line&quot;: 5,
+            &quot;column&quot;: 24
+          },
+          &quot;end&quot;: {
+            &quot;line&quot;: 5,
+            &quot;column&quot;: 51
+          }
+        },
+        &quot;2&quot;: {
+          &quot;start&quot;: {
+            &quot;line&quot;: 7,
+            &quot;column&quot;: 0
+          },
+          &quot;end&quot;: {
+            &quot;line&quot;: 39,
+            &quot;column&quot;: 1
+          }
+        }
+      },
+      &quot;fnMap&quot;: {},
+      &quot;branchMap&quot;: {},
+      &quot;s&quot;: {
+        &quot;0&quot;: 1,
+        &quot;1&quot;: 1,
+        &quot;2&quot;: 1
+      },
+      &quot;f&quot;: {},
+      &quot;b&quot;: {},
+      &quot;_coverageSchema&quot;: &quot;1a1c01bbd47fc00a2c39e90264f33305004495a9&quot;,
+      &quot;hash&quot;: &quot;dd963b26ee6ff79de382261131b0836d34aec4a2&quot;
+    }
+  }
+}</div>
+        </div>
+        <div class="d-none" id="test-global-config">{
+  &quot;bail&quot;: 0,
+  &quot;changedFilesWithAncestor&quot;: false,
+  &quot;collectCoverage&quot;: true,
+  &quot;collectCoverageFrom&quot;: [],
+  &quot;coverageDirectory&quot;: &quot;C:\\Users\\macwin\\Desktop\\dubai\\apiAuto-master\\coverage&quot;,
+  &quot;coverageProvider&quot;: &quot;babel&quot;,
+  &quot;coverageReporters&quot;: [
+    &quot;html&quot;,
+    &quot;text&quot;
+  ],
+  &quot;coverageThreshold&quot;: {
+    &quot;global&quot;: {
+      &quot;branches&quot;: 100,
+      &quot;functions&quot;: 100,
+      &quot;lines&quot;: 100,
+      &quot;statements&quot;: 100
+    }
+  },
+  &quot;detectLeaks&quot;: false,
+  &quot;detectOpenHandles&quot;: false,
+  &quot;errorOnDeprecated&quot;: false,
+  &quot;expand&quot;: false,
+  &quot;findRelatedTests&quot;: false,
+  &quot;forceExit&quot;: false,
+  &quot;json&quot;: false,
+  &quot;lastCommit&quot;: false,
+  &quot;listTests&quot;: false,
+  &quot;logHeapUsage&quot;: false,
+  &quot;maxConcurrency&quot;: 5,
+  &quot;maxWorkers&quot;: 1,
+  &quot;noStackTrace&quot;: false,
+  &quot;nonFlagArgs&quot;: [],
+  &quot;notify&quot;: false,
+  &quot;notifyMode&quot;: &quot;failure-change&quot;,
+  &quot;onlyChanged&quot;: false,
+  &quot;onlyFailures&quot;: false,
+  &quot;passWithNoTests&quot;: false,
+  &quot;projects&quot;: [],
+  &quot;reporters&quot;: [
+    [
+      &quot;default&quot;,
+      {}
+    ],
+    [
+      &quot;C:\\Users\\macwin\\Desktop\\dubai\\apiAuto-master\\node_modules\\jest-stare\\lib\\index.js&quot;,
+      {}
+    ]
+  ],
+  &quot;rootDir&quot;: &quot;C:\\Users\\macwin\\Desktop\\dubai\\apiAuto-master&quot;,
+  &quot;runTestsByPath&quot;: false,
+  &quot;skipFilter&quot;: false,
+  &quot;testFailureExitCode&quot;: 1,
+  &quot;testPathPattern&quot;: &quot;&quot;,
+  &quot;testSequencer&quot;: &quot;C:\\Users\\macwin\\Desktop\\dubai\\apiAuto-master\\node_modules\\@jest\\test-sequencer\\build\\index.js&quot;,
+  &quot;testTimeout&quot;: 60000,
+  &quot;updateSnapshot&quot;: &quot;new&quot;,
+  &quot;useStderr&quot;: false,
+  &quot;verbose&quot;: true,
+  &quot;watch&quot;: false,
+  &quot;watchAll&quot;: false,
+  &quot;watchman&quot;: true
+}</div>
+
+    </main>
+    <hr>
+    <footer class="footer">
+        <div class="container">
+            <span class="text-muted">jest-stare 2020</span>
+        </div>
+    </footer>
+</body>
+
+</html>
+

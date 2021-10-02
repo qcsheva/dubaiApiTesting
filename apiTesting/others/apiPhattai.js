@@ -1,0 +1,16 @@
+module.exports = {
+    register: "/api/v1/register",
+    login: "/api/v1/login",
+    deposit: "/api/v1/payment/indexdeposit",
+    depositbank: "/api/v1/payment/depositbank",
+    getCard: "/api/v1/payment/gwinfo",
+    depositCard: "/api/v1/payment/depositcard",
+    homeSlider: "/api/v1/home/slider",
+    homefav: "/api/v1/home/games/favorites",
+    hotmatch: "/api/v1/hotmatch/getMatch",
+    topwinner: "/api/v1/statistic/user/winners",
+    sports: "/api/v1/athena/sportUrl",
+    vsSports: "/api/v1/athena/vsUrl",
+    fishing: "/api/v1/lobby",
+    jackpot: "/api/v1/slot/jackpot",
+}
