@@ -58,17 +58,18 @@ module.exports = {
 
     //game providers
     allproviders: "/api/v1/games/search?category_name=all&provider=all",
-    microgaming: "/api/v1/games/search?provider=microgaming",
-    pragmaticplay: "/api/v1/games/search?provider=pragmatic-play",
-    cq9: "/api/v1/games/search?provider=cq9",
-    evoplay: "/api/v1/games/search?provider=evoplay",
-    playngo: "/api/v1/games/search?provider=playngo",
-    techplay: "/api/v1/games/search?provider=techplay",
-    qtech: "/api/v1/games/search?provider=qtech",
-    evo: "/api/v1/games/search?provider=evo",
-    playngo: "/api/v1/games/search?provider=playngo",
-    spribe: "/api/v1/games/search?provider=spribe",
+    microgaming: "/api/v1/games/search?category_name=all&provider=microgaming",
+    pragmaticplay: "/api/v1/games/search?category_name=all&provider=pragmatic-play",
+    cq9: "/api/v1/games/search?category_name=all&provider=cq9",
+    evoplay: "/api/v1/games/search?category_name=all&provider=evoplay",
+    playngo: "/api/v1/games/search?category_name=all&provider=playngo",
+    techplay: "/api/v1/games/search?category_name=all&provider=techplay",
+    qtech: "/api/v1/games/search?category_name=all&provider=qtech",
+    evo: "/api/v1/games/search?category_name=all&provider=evo",
+    spribe: "/api/v1/games/search?category_name=all&provider=spribe",
 
+    //telegram
+    telegram_sendmessage:"/bot2049901241:AAESImHHL06gTDCnEFvRsgHfQE6-tKC6LKI/sendMessage?chat_id=1857166911&text=\"failed tc\"",
 
 
 
